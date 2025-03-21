@@ -1,29 +1,28 @@
 import { NextResponse } from 'next/server';
 
 export async function middleware(req) {
-  const token = req.cookies.get('token');
+  // Look for Firebase auth token in cookies
+  // You need to ensure your Firebase auth setup saves the token to cookies
+  const firebaseToken = req.cookies.get('firebaseAuth');
 
-  if (token && req.nextUrl.pathname === '/') {
+  if (firebaseToken && req.nextUrl.pathname === '/') {
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
-
-  if (!token && req.nextUrl.pathname !== '/') {
-    return NextResponse.redirect(new URL('/', req.url));
-  }
+  if(!firebaseToken){
+    console.log(req.nextUrl.pathname, "here");
+    if(req.nextUrl.pathname === '/login/'){
+      return NextResponse.next();
+    }
+    if(req.nextUrl.pathname !== '/'){
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+    }
 
   return NextResponse.next();
 }
 
 export const config = {
-    matcher: [
-      /*
-       * Match all request paths except for the ones starting with:
-       * - api (API routes)
-       * - _next/static (static files)
-       * - _next/image (image optimization files)
-       * - favicon.ico (favicon file)
-       * - public folder files (.css, .js, images, etc.)
-       */
-      '/((?!api|_next/static|_next/image|favicon.ico|.*\\.css|.*\\.js|.*\\.png|.*\\.jpg|.*\\.svg).*)'
-    ],
-  }
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.css|.*\\.js|.*\\.png|.*\\.jpg|.*\\.svg).*)'
+  ],
+}

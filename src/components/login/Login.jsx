@@ -13,7 +13,7 @@ const Login = () => {
 
   useEffect(() => {
     if (!isLoading && authUser) {
-      handleNavigate("contact");
+      router.push("/dashboard");
     }
   }, [isLoading, authUser]);
   return isLoading || (!isLoading && authUser) ? (

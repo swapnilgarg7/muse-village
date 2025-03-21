@@ -15,8 +15,13 @@ export default function useFirebaseAuth() {
 
   const clear = () => {
     setAuthUser(null);
+    document.cookie = "firebaseAuth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     SetLoading(false);
   };
+
+  const saveTokenToCookie = (token) => {
+    document.cookie = `firebaseAuth=${token}; path=/; max-age=3600; SameSite=Strict`;
+  }
 
   const authStateChanged = (user) => {
     SetLoading(true);
@@ -29,7 +34,9 @@ export default function useFirebaseAuth() {
       email: user.email,
       name: user.displayName,
     });
-
+    user.getIdToken().then(token => {
+      saveTokenToCookie(token);
+    });
     SetLoading(false);
   };
 
