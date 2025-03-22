@@ -10,7 +10,6 @@ const Login = () => {
   const { initialValues, schema, handleSubmit, handleNavigate, googleSignIn } =
     useLogin();
   const { authUser, isLoading } = useAuth();
-
   useEffect(() => {
     if (!isLoading && authUser) {
       router.push("/dashboard");
