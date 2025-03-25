@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { onAuthStateChanged, signOut as authSignOut } from "firebase/auth";
 import { auth } from "./firebase";
+import { useRouter } from "next/navigation";
 
 const AuthUserContext = createContext({
   authUser: null,
@@ -12,6 +13,8 @@ const AuthUserContext = createContext({
 export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState(null);
   const [isLoading, SetLoading] = useState(false);
+
+  const router = useRouter();
 
   const clear = () => {
     setAuthUser(null);
@@ -42,6 +45,7 @@ export default function useFirebaseAuth() {
 
   const signOut = () => {
     authSignOut(auth).then(() => clear());
+    router.push("/");
   };
 
   useEffect(() => {

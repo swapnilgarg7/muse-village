@@ -105,7 +105,6 @@ export const useContact = () => {
       handleFetch(email);
     } catch (error) {
       console.error(error);
-      Warn("Something Wrong");
     }
 
     resetForm();

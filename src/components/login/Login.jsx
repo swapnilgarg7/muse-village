@@ -5,11 +5,13 @@ import { useLogin } from "./hook/useLogin";
 import { useAuth } from "../../../firebase/auth";
 import { useEffect } from "react";
 import Loading from "../loader/Loading";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const { initialValues, schema, handleSubmit, handleNavigate, googleSignIn } =
     useLogin();
   const { authUser, isLoading } = useAuth();
+  const router = useRouter();
   useEffect(() => {
     if (!isLoading && authUser) {
       router.push("/dashboard");
