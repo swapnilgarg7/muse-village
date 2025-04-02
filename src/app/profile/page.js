@@ -345,7 +345,7 @@ export default function ProfilePage() {
                 
                 <div className="mb-6">
                   <label className="block text-amber-800 mb-2">Payment Method</label>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 text-amber-800">
                     <label className="flex items-center">
                       <input
                         type="radio"

@@ -1,47 +1,102 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { collection, getDocs, orderBy, query, limit } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import { useToastMessages } from "@/components/message/useToastMessages";
+// Try to import the toast message hook with a try-catch in case it's not available
+let useToastMessages;
+try {
+  useToastMessages = require("@/components/message/useToastMessages").useToastMessages;
+} catch (e) {
+  // If import fails, we'll use our fallback functions
+  console.warn("Could not import useToastMessages, using fallbacks");
+}
 import Link from "next/link";
+// Keep using AuthContext but add fallback handling
+import { useAuth } from "@/context/AuthContext"; // Import your auth context
+import { auth } from "../../firebase/firebase"; // Fallback direct import
+import GigDetailModal from "@/components/GigDetailModal"; // Import the modal component we just created
 
 export default function PublicGigsPage() {
   const [gigs, setGigs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { Warn } = useToastMessages();
+  const [selectedGig, setSelectedGig] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  // Get toast functions, with fallbacks in case the hook isn't available
+  const toastFunctions = useToastMessages ? useToastMessages() : {};
+  const showWarning = toastFunctions.Warn || ((msg) => console.warn('Warning:', msg));
+  // Try the context first, but have a fallback
+  const [user, setUser] = useState(null);
+  const authContext = typeof useAuth === 'function' ? useAuth() : null;
+  
+  useEffect(() => {
+    // If context works, use it
+    if (authContext && authContext.user !== undefined) {
+      setUser(authContext.user);
+      return;
+    }
+    
+    // Otherwise, use direct Firebase auth
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    
+    return () => unsubscribe();
+  }, [authContext]);
+
+  const fetchGigs = useCallback(async () => {
+    try {
+      const gigsQuery = query(
+        collection(db, "gigs"),
+        orderBy("createdAt", "desc"),
+        limit(50)
+      );
+      
+      const gigSnap = await getDocs(gigsQuery);
+      const gigsList = [];
+      
+      gigSnap.forEach((doc) => {
+        gigsList.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      setGigs(gigsList);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching gigs:", error);
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchGigs = async () => {
-      try {
-        const gigsQuery = query(
-          collection(db, "gigs"),
-          orderBy("createdAt", "desc"),
-          limit(50)
-        );
-        
-        const gigSnap = await getDocs(gigsQuery);
-        const gigsList = [];
-        
-        gigSnap.forEach((doc) => {
-          gigsList.push({
-            id: doc.id,
-            ...doc.data()
-          });
-        });
-        
-        setGigs(gigsList);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching gigs:", error);
-        setLoading(false);
-      }
-    };
-    
     fetchGigs();
-  }, [Warn]);
+  }, [fetchGigs]);
+
+  const handleContinueClick = (gig) => {
+    if (!user) {
+      // Redirect to login page if user is not logged in
+      showWarning("Please login to continue with this gig");
+      return;
+    }
+    
+    // Prevent users from selecting their own gigs
+    if (gig.userId === user.uid) {
+      showWarning("You cannot select your own gig");
+      return;
+    }
+    
+    setSelectedGig(gig);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedGig(null);
+  };
 
   if (loading) {
     return (
@@ -105,12 +160,15 @@ export default function PublicGigsPage() {
                     <span className="ml-1">{gig.username}</span>
                   </div>
                   
-                  <div className="mt-4 pt-4 border-t border-amber-100 flex justify-between">
+                  <div className="mt-4 pt-4 border-t border-amber-100 flex justify-between items-center">
                     <span className="text-sm text-amber-500">
                       {gig.createdAt && new Date(gig.createdAt.toDate()).toLocaleDateString()}
                     </span>
-                    <button className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm">
-                      Contact Creator
+                    <button 
+                      onClick={() => handleContinueClick(gig)} 
+                      className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm"
+                    >
+                      Continue
                     </button>
                   </div>
                 </div>
@@ -119,6 +177,16 @@ export default function PublicGigsPage() {
           )}
         </div>
       </motion.div>
+      
+      {/* Render the modal when showModal is true */}
+      {showModal && selectedGig && (
+        <GigDetailModal 
+          gig={selectedGig} 
+          user={user} 
+          onClose={handleCloseModal} 
+          refreshGigs={fetchGigs}
+        />
+      )}
     </section>
   );
 }

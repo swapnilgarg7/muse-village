@@ -5,6 +5,7 @@ export async function middleware(req) {
   // You need to ensure your Firebase auth setup saves the token to cookies
   const firebaseToken = req.cookies.get('firebaseAuth');
   if(firebaseToken){
+    console.log(req.nextUrl.pathname, "here");
     if(req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/login/'){
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }

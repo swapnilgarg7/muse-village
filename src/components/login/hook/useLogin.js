@@ -49,7 +49,7 @@ export const useLogin = () => {
             displayName: result.user.displayName || '',
             email: result.user.email,
             photoURL: result.user.photoURL || '',
-            points: 0,
+            points: 50,
             completedGigs: 0,
             createdAt: new Date()
           });
