@@ -25,9 +25,13 @@ const Navbar = () => {
     <>
       <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-amber-100">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/dashboard" className="text-2xl font-bold text-amber-900">
+          <div className="flex items-center gap-4">
+        <img src="/logo.png" alt="Logo" className="h-10 w-10 ml-2 inline-block" />
+<Link href="/dashboard" className="text-2xl font-bold text-amber-900">
           Muse Village
         </Link>
+          </div>
+        
         <div className="flex items-center gap-4">
           
             {!authUser && (      

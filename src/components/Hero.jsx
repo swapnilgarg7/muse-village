@@ -22,12 +22,23 @@ export default function Hero({ t }) {
           <h1 className="text-5xl font-bold text-amber-900 mb-6">
             {t.title}
           </h1>
+          
             <h2 className="text-3xl font-semibold text-amber-800 mb-2">
                 {t.subTitle}
             </h2>
-          <p className="text-xl text-amber-800 mb-8">
+            <div className="flex flex-row items-center justify-center gap-4 mb-8">
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={150}
+            height={150}
+            className="rounded-full"
+          />
+<p className="text-xl text-amber-800 ">
             {t.description}
           </p>
+            </div>
+          
           <button
           onClick={handleSignIn}
            className="px-8 py-3 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors">
