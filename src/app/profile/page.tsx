@@ -209,10 +209,10 @@ export default function ProfilePage() {
                     <p className="text-amber-500 text-xs mt-0.5">Gigs Posted</p>
                   </div>
                   <div className="h-8 w-px bg-amber-100 self-center" />
-                  <div className="text-center">
+                  {/* <div className="text-center">
                     <span className="text-2xl font-bold text-amber-900">{user?.completedGigs || 0}</span>
                     <p className="text-amber-500 text-xs mt-0.5">Completed</p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
