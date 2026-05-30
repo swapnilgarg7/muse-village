@@ -12,10 +12,7 @@
             },
           ],
         },
-        eslint: {
-          ignoreDuringBuilds: true,
-        },
-        typescript: {
+typescript: {
           ignoreBuildErrors: true,
         },
       };
