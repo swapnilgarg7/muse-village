@@ -23,8 +23,8 @@ export const texts = {
         description: "Verified musicians with professional experience."
       },
       compensation: {
-        title: "Fair Compensation",
-        description: "Transparent pricing and point-based collaboration system."
+        title: "Easy to Connect",
+        description: "Click any gig to instantly get the creator's contact details and collaborate directly."
       }
     }
   },
@@ -32,32 +32,5 @@ export const texts = {
     title: "Featured Musicians",
     rating: "Rating"
   },
-  pricing: {
-    title: "Simple, Transparent Pricing",
-    monthly: {
-      name: "Monthly",
-      price: "$5",
-      period: "per month",
-      features: [
-        "Access to all musicians",
-        "Unlimited collaborations",
-        "Point-based system",
-        "Basic support"
-      ]
-    },
-    yearly: {
-      name: "Yearly",
-      price: "$50",
-      period: "per year",
-      features: [
-        "All monthly features",
-        "2 months free",
-        "Priority support",
-        "Early access to new features"
-      ],
-      popular: "Most Popular"
-    },
-    cta: "Get Started"
-  }
 }
 

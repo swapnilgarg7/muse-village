@@ -1,8 +1,5 @@
-export default function page() {
-    return (
-        <div>
-            <h1>Dashboard</h1>
-            <p>Welcome to the dashboard</p>
-        </div>
-    );
+import PublicGigsPage from "~/components/PublicGigsPage";
+
+export default function DashboardPage() {
+    return <PublicGigsPage />;
 }
