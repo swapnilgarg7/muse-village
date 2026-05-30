@@ -16,7 +16,6 @@ export default function Home() {
                 <StatsBar />
                 <HowItWorks />
                 <Features />
-                <Testimonials />
                 <DonationSection />
                 <Footer />
             </main>
